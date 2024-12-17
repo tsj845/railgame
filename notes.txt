@@ -1,0 +1,3 @@
+worldgen (eventual)
+two level generation, macro scale generates broad features
+micro scale generates fine details
