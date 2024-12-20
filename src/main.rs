@@ -19,13 +19,14 @@ fn main() {
     let event_loop = glium::winit::event_loop::EventLoopBuilder::new().build().expect("event loop building");
     let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new().build(&event_loop);
 
-    let vertex1 = Vertex { position: [-0.5, -0.5],  color: [1.0, 0.0, 0.0, 1.0] };
-    let vertex2 = Vertex { position: [ 0.0,  0.5],  color: [0.0, 1.0, 0.0, 1.0] };
-    let vertex3 = Vertex { position: [ 0.5, -0.25], color: [0.0, 0.0, 1.0, 1.0] };
-    let shape = vec![vertex1, vertex2, vertex3];
+    let vertex1 = Vertex { position: [-0.5, -0.5], color: [1.0, 0.0, 0.0, 1.0] };
+    let vertex2 = Vertex { position: [-0.5,  0.5], color: [0.0, 1.0, 0.0, 1.0] };
+    let vertex3 = Vertex { position: [ 0.5, -0.5], color: [0.0, 0.0, 1.0, 1.0] };
+    let vertex4 = Vertex { position: [ 0.5,  0.5], color: [1.0, 0.0, 1.0, 1.0] };
+    let shape = vec![vertex1, vertex2, vertex3, vertex4];
 
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
-    let indices = glium::index::NoIndices(glium::index::PrimitiveType::TrianglesList);
+    let indices = glium::IndexBuffer::new(&display, glium::index::PrimitiveType::TrianglesList, &[0, 1, 2, 1, 2, 3u32]).unwrap();
 
     let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
 
@@ -39,7 +40,7 @@ fn main() {
                     display.resize(window_size.into());
                 },
                 WindowEvent::RedrawRequested => {
-                    let scale = 3.0 / (1.0+(2.0f32).powf(-angle));
+                    let scale = 0.5+angle;
 
                     let mut frame = display.draw();
                     frame.clear_color(0.0, 0.0, 1.0, 1.0);
@@ -48,8 +49,8 @@ fn main() {
                 },
                 WindowEvent::KeyboardInput { event, .. } => {
                     match event.logical_key {
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowRight) => angle += 0.05,
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowLeft) => angle -= 0.05,
+                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowRight) => angle = (angle+0.05).min(2.5),
+                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowLeft) => angle = (angle-0.05).max(-0.5),
                         _ => {}
                     }
                     window.request_redraw();
