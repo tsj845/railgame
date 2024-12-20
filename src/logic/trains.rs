@@ -1,11 +1,27 @@
 //! all that has to do with tracks in world space
 
-use super::specs::SpecId;
-use std::rc::Weak;
+use super::specs::{CarSpec, SpecId};
+use std::{rc::Weak, sync::{Arc, LazyLock, Mutex}};
 
-use super::{company::CompanyId, world::{FullLoc, Loc}};
+use super::{company::CompanyId, world::FullLoc};
+
+pub type TrackId = u32;
+pub type RouteId = u32;
+pub type TrainId = u32;
+pub type CarId = u32;
+
+static TRACK_ID_COUNTER: LazyLock<Arc<Mutex<u32>>> = LazyLock::new(||Arc::new(Mutex::new(0u32)));
+
+/// gets the next track id, threadsafe
+fn get_next_trackid() -> TrackId {
+    let mut l = TRACK_ID_COUNTER.lock().unwrap();
+    let r = *l;
+    *l += 1;
+    return r;
+}
 
 pub struct Track<'a> {
+    id:    TrackId,
     owner: CompanyId,
     start: FullLoc,
     end:   FullLoc,
@@ -13,11 +29,11 @@ pub struct Track<'a> {
 }
 impl<'a> Track<'a> {
     pub fn new(owner: CompanyId, start: FullLoc, end: FullLoc, route: &'a[FullLoc]) -> Self {
-        Self{owner,start,end,route}
+        Self{id:get_next_trackid(),owner,start,end,route}
     }
     pub fn from_locs(owner: CompanyId, locs: &'a[FullLoc]) -> Self {
         // Self{start:locs[0],end:locs[locs.len()-1],route:Self::simplify(locs)}
-        Self{owner,start:locs[0],end:locs[locs.len()-1],route:&locs[1..locs.len()-1]}
+        Self{id:get_next_trackid(),owner,start:locs[0],end:locs[locs.len()-1],route:&locs[1..locs.len()-1]}
     }
     // pub fn simplify(locs: &'a[FullLoc]) -> &'a[FullLoc] {
     //     let mut v = Vec::new();
@@ -28,6 +44,7 @@ impl<'a> Track<'a> {
 }
 
 pub struct Route<'a> {
+    id:     RouteId,
     owner:  CompanyId,
     name:   &'a str,
     stops:  &'a[FullLoc],
@@ -35,19 +52,23 @@ pub struct Route<'a> {
 }
 
 pub struct Train<'a> {
+    id:    TrainId,
     owner: CompanyId,
     name:  &'a str,
-    route: Route<'a>,
-    cars:  &'a[TrainCar<'a>],
+    /// trains can only be assigned to one route at a time
+    route: Weak<Route<'a>>,
+    cars:  &'a[Weak<TrainCar<'a>>],
     spec:  SpecId,
 }
 pub struct TrainCar<'a> {
+    id:    CarId,
     owner: CompanyId,
+    /// cars can only be part of one train at a time
     train: Weak<Train<'a>>,
-    // cargo: Cargo,
+    /// how much cargo is in the car
     quant: u16,
-    // capacity: u16,
-    spec:  SpecId,
+    /// data about the car type
+    spec:  Weak<CarSpec>,
 }
 
 /// Cargo types, all negative entries are placeholders
@@ -69,7 +90,3 @@ pub enum Cargo {
     ProductivityBoosters,
     Substrates,
 }
-
-// fn t() {
-//     Track::new(0,FullLoc::from(Loc{x:0,y:0}), FullLoc::from(Loc{x:0,y:0}), vec![FullLoc::from(Loc{x:0,y:0})].as_slice());
-// }

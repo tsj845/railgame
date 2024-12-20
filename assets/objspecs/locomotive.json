@@ -1,0 +1,13 @@
+[
+    {
+        "specid": 0,
+        "name": "Big Boy",
+        "historic_owner": "Union Pacific",
+        "max_speed": 80,
+        "min_curve": 20,
+        "gauge": 565,
+        "weight": 1208750,
+        "fuel": [{"type":"coal","capacity":28,"consumption":11},{"type":"water","capacity":25000,"consumption":12000}],
+        "tractive_effort":135375
+    }
+]

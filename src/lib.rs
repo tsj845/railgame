@@ -1,8 +1,8 @@
-mod logic {
-    mod world;
-    mod trains;
-    mod saving;
-    mod game;
-    mod company;
-    mod specs;
+pub mod logic {
+    pub mod world;
+    pub mod trains;
+    pub mod saving;
+    pub mod game;
+    pub mod company;
+    pub mod specs;
 }

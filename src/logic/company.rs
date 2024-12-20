@@ -1,6 +1,8 @@
 //! companies
 
-use super::game::PlayerId;
+use std::collections::HashMap;
+
+use super::{game::PlayerId, trains::{Route, RouteId, Train, TrainCar}};
 
 pub type CompanyId = u16;
 /// 10k exact exist for each company
@@ -14,4 +16,7 @@ pub struct Company<'a> {
     name: &'a str,
     ceo: PlayerId,
     worth: Money,
+    routes: Vec<Route<'a>>,
+    trains: Vec<Train<'a>>,
+    cars:   Vec<TrainCar<'a>>,
 }

@@ -1,0 +1,14 @@
+[
+    {
+        "specid": 0,
+        "name": "Hopper Car",
+        "cargo_types": ["coal", "grain"],
+        "capacity": {"stdfreight":{"weight":243,"volume":3200}}
+    },
+    {
+        "specid": 1,
+        "name": "Tanker Car",
+        "cargo_types": ["oil", "gasoline"],
+        "capacity": {"stdfreight":{"weight":198,"volume":10000}}
+    }
+]
