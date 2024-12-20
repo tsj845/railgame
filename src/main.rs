@@ -6,7 +6,7 @@ use glium::winit::event::WindowEvent;
 
 #[derive(Copy, Clone)]
 struct Vertex {
-    position: [f32; 2],
+    position: [f32; 3],
     color: [f32; 4]
 }
 implement_vertex!(Vertex, position, color);
@@ -19,10 +19,10 @@ fn main() {
     let event_loop = glium::winit::event_loop::EventLoopBuilder::new().build().expect("event loop building");
     let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new().build(&event_loop);
 
-    let vertex1 = Vertex { position: [-0.5, -0.5], color: [1.0, 0.0, 0.0, 1.0] };
-    let vertex2 = Vertex { position: [-0.5,  0.5], color: [0.0, 1.0, 0.0, 1.0] };
-    let vertex3 = Vertex { position: [ 0.5, -0.5], color: [0.0, 0.0, 1.0, 1.0] };
-    let vertex4 = Vertex { position: [ 0.5,  0.5], color: [1.0, 0.0, 1.0, 1.0] };
+    let vertex1 = Vertex { position: [-0.5, -0.5, 0.0], color: [1.0, 0.0, 0.0, 1.0] };
+    let vertex2 = Vertex { position: [-0.5,  0.5, 0.0], color: [0.0, 1.0, 0.0, 1.0] };
+    let vertex3 = Vertex { position: [ 0.5, -0.5, 0.0], color: [0.0, 0.0, 1.0, 1.0] };
+    let vertex4 = Vertex { position: [ 0.5,  0.5, 1.0], color: [1.0, 0.0, 1.0, 1.0] };
     let shape = vec![vertex1, vertex2, vertex3, vertex4];
 
     let vertex_buffer = glium::VertexBuffer::new(&display, &shape).unwrap();
@@ -40,17 +40,15 @@ fn main() {
                     display.resize(window_size.into());
                 },
                 WindowEvent::RedrawRequested => {
-                    let scale = 0.5+angle;
-
                     let mut frame = display.draw();
-                    frame.clear_color(0.0, 0.0, 1.0, 1.0);
-                    frame.draw(&vertex_buffer, &indices, &program, &uniform! { trans: [[1., 0., 0., 0.], [0., 1., 0., scale], [0., 0., 1., 0.], [0., 0., 0., 1.]]}, &Default::default()).unwrap();
+                    frame.clear_color(0.3, 0.2, 1.0, 1.0);
+                    frame.draw(&vertex_buffer, &indices, &program, &uniform! { trans: [[1., 0., 0., 0.], [0., angle.cos(), -angle.sin(), angle.sin()], [0., angle.sin()/4., angle.cos()/4., -angle.cos()/4.], [0., 0., 0., 1.0f32]]}, &Default::default()).unwrap();
                     frame.finish().unwrap();
                 },
                 WindowEvent::KeyboardInput { event, .. } => {
                     match event.logical_key {
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowRight) => angle = (angle+0.05).min(2.5),
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowLeft) => angle = (angle-0.05).max(-0.5),
+                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowRight) => angle = (angle+0.05).min(1.2),
+                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowLeft) => angle = (angle-0.05).max(0.),
                         _ => {}
                     }
                     window.request_redraw();
