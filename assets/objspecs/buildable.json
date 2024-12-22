@@ -1,6 +1,9 @@
-[
-    {
-        "specid": 0,
-        "name": ""
-    }
-]
+{
+    "build":true,
+    "content": [
+        {
+            "specid": 0,
+            "name": ""
+        }
+    ]
+}

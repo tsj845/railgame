@@ -1,29 +1,34 @@
 //! tracks and manages all other logic structures
 //! may be moved to src later
 
-use std::{collections::LinkedList, rc::Weak};
+use std::{collections::LinkedList, sync::{Arc,Weak,Mutex}};
 
 use super::{company::{Company, CompanyId, Money, Shares}, trains::{Track, Train}, world::World};
+/// global mutable processing lock
+/// aquire this THEN SET G_MUTPROC to false for any ops that can't have data changed while running
+/// release this lock ONLY when G_MUTPROC is set back to true
+pub static G_MUTPROC_LOCK: Mutex<()> = Mutex::new(());
+pub static mut G_MUTPROC: bool = true;
 
 pub type PlayerId = u16;
 
 pub struct Player<'a> {
-    id: PlayerId,
-    name: &'a str,
-    worth: Money,
-    shares: Vec<(CompanyId, Shares)>,
+    pub id: PlayerId,
+    pub name: &'a str,
+    pub worth: Money,
+    pub shares: Vec<(CompanyId, Shares)>,
 }
 
 pub struct Game<'a> {
     /// is this a networked game?
-    netenabled: bool,
+    pub netenabled: bool,
     /// is this player the host?
-    ownssession: bool,
-    world: World<'a>,
-    companies: Vec<Company<'a>>,
-    players: Vec<Player<'a>>,
-    tracks: Vec<Track<'a>>,
+    pub ownssession: bool,
+    pub world: World<'a>,
+    pub companies: Vec<Arc<Mutex<Company<'a>>>>,
+    pub players: Vec<Player<'a>>,
+    pub tracks: Vec<Arc<Mutex<Track<'a>>>>,
     /// weak refs to all active trains
     /// LinkedList because trains will be added and removed randomly, prevents expensive moves
-    trains: LinkedList<Weak<Train<'a>>>
+    pub trains: LinkedList<Weak<Mutex<Train<'a>>>>
 }

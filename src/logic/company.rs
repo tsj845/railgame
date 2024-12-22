@@ -1,5 +1,7 @@
 //! companies
 
+use std::sync::{Arc,Mutex};
+
 use super::{game::PlayerId, trains::{Route, Train, TrainCar}};
 
 pub type CompanyId = u16;
@@ -15,10 +17,11 @@ impl Price {
 }
 
 pub struct Company<'a> {
-    name:   &'a str,
-    ceo:    PlayerId,
-    worth:  Money,
-    routes: Vec<Route<'a>>,
-    trains: Vec<Train<'a>>,
-    cars:   Vec<TrainCar<'a>>,
+    pub id: CompanyId,
+    pub name:   &'a str,
+    pub ceo:    PlayerId,
+    pub worth:  Money,
+    pub routes: Vec<Arc<Route<'a>>>,
+    pub trains: Vec<Arc<Mutex<Train<'a>>>>,
+    pub cars:   Vec<Arc<Mutex<TrainCar<'a>>>>,
 }

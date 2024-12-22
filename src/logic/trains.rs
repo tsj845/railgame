@@ -19,11 +19,11 @@ pub type ObjId = u32;
 
 /// use constructor function
 pub struct Track<'a> {
-    // id:    ObjId,
-    owner: Weak<Company<'a>>,
-    start: FullLoc,
-    end:   FullLoc,
-    route: &'a[FullLoc]
+    pub id:    ObjId,
+    pub owner: Weak<Mutex<Company<'a>>>,
+    pub start: FullLoc,
+    pub end:   FullLoc,
+    pub route: &'a[FullLoc]
 }
 // impl<'a> Track<'a> {
 //     pub fn new(owner: Weak<Company<'a>>, start: FullLoc, end: FullLoc, route: &'a[FullLoc]) -> Self {
@@ -32,41 +32,41 @@ pub struct Track<'a> {
 // }
 
 pub struct Route<'a> {
-    // id:     ObjId,
-    owner:  Weak<Company<'a>>,
-    name:   &'a str,
-    stops:  &'a[FullLoc],
-    tracks: &'a[Track<'a>]
+    pub id:     ObjId,
+    pub owner:  Weak<Mutex<Company<'a>>>,
+    pub name:   &'a str,
+    pub stops:  &'a[FullLoc],
+    pub tracks: &'a[Weak<Mutex<Track<'a>>>]
 }
 
 pub struct Locomotive<'a> {
-    // id: ObjId,
-    name: &'a str,
-    spec: Weak<LocomotiveSpec>,
-    owner: Weak<Company<'a>>,
-    train: Weak<Train<'a>>,
+    pub id: ObjId,
+    pub name: &'a str,
+    pub spec: &'static LocomotiveSpec,
+    pub owner: Weak<Mutex<Company<'a>>>,
+    pub train: Weak<Mutex<Train<'a>>>,
 }
 
 pub struct Train<'a> {
-    // id:    ObjId,
-    owner: Weak<Company<'a>>,
-    name:  &'a str,
+    pub id:    ObjId,
+    pub owner: Weak<Mutex<Company<'a>>>,
+    pub name:  &'a str,
     /// trains can only be assigned to one route at a time
-    route: Weak<Route<'a>>,
+    pub route: Weak<Route<'a>>,
     /// one primary locomotive
-    loco:  Weak<Locomotive<'a>>,
-    helpers: &'a[Weak<Locomotive<'a>>],
-    cars:  &'a[Weak<TrainCar<'a>>],
+    pub loco:  Weak<Mutex<Locomotive<'a>>>,
+    pub helpers: &'a[Weak<Mutex<Locomotive<'a>>>],
+    pub cars:  &'a[Weak<Mutex<TrainCar<'a>>>],
 }
 pub struct TrainCar<'a> {
-    // id:    ObjId,
-    owner: Weak<Company<'a>>,
+    pub id:    ObjId,
+    pub owner: Weak<Mutex<Company<'a>>>,
     /// cars can only be part of one train at a time
-    train: Weak<Train<'a>>,
+    pub train: Weak<Mutex<Train<'a>>>,
     /// how much cargo is in the car
-    quant: u16,
+    pub quant: u16,
     /// data about the car type
-    spec:  Weak<CarSpec>,
+    pub spec:  &'static CarSpec,
 }
 
 /// Cargo types, all negative entries are placeholders

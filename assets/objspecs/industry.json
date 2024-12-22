@@ -1,9 +1,9 @@
 [
     {
         "specid": 0,
-        "name": "wood",
+        "name": "lumber",
         "requirements": [
-            {"terrain":"forest"}
+            {"terrain":{"type":"forest","range":3,"min":8}}
         ],
         "consumes": [],
         "produces": [{"type":"wood","rate":{"base":25,"scaling":5}}]
