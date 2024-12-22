@@ -5,4 +5,11 @@ pub mod logic {
     pub mod game;
     pub mod company;
     pub mod specs;
+    mod specdefs {
+        pub mod locomotive;
+        pub mod industry;
+        pub mod buildable;
+        pub mod traincar;
+        pub mod resource;
+    }
 }

@@ -1,7 +1,7 @@
 //! all that has to do with tracks in world space
 
 use super::{company::Company, specs::*};
-use std::{rc::Weak, sync::Mutex};
+use std::sync::{Weak, Mutex};
 
 use super::world::FullLoc;
 

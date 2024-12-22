@@ -1,0 +1,29 @@
+[
+    {
+        "id":0,
+        "name": "hopper",
+        "desc": "this resource can be transported via hopper car",
+        "constraints": [
+            {"car":{"taggedwith":["hopper"]}}
+        ]
+    },
+    {
+        "id":1,
+        "name": "ore",
+        "desc": "an ore",
+        "implies": ["hopper"]
+    },
+    {
+        "id":2,
+        "name": "flatcar",
+        "desc": "this resource can be transported via flatcar",
+        "constraints": [
+            {"car":{"taggedwith":["flatcar"]}}
+        ]
+    },
+    {
+        "id":3,
+        "name": "metal",
+        "desc": "a metal product"
+    }
+]
