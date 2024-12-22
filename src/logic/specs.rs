@@ -1,7 +1,7 @@
 //! specifications for game systems data
 //! eg. trains, cars, resources, etc.
 
-use std::{borrow::Cow, sync::{OnceLock,LazyLock}};
+use std::{borrow::Cow, sync::LazyLock};
 
 use serde::{Serialize, Deserialize};
 

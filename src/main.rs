@@ -7,7 +7,8 @@ use std::time::Instant;
 
 use glium::Surface;
 use glium::winit::event::WindowEvent;
-use railgame::logic::specs::{get_indust_spec, CarCapacity};
+use railgame::logic::specs::get_indust_spec;
+use railgame::logic::world::World;
 
 #[derive(Copy, Clone)]
 struct Vertex {
@@ -78,6 +79,7 @@ fn main() {
     if args().len() > 1 {
         // println!("{}", serde_json::to_string(&CarCapacity::Test(0)).unwrap());
         println!("{:?}", get_indust_spec(0));
+        println!("{:#?}", World::from_jsonstr(include_str!("../assets/sculpted/test.json")));
         return;
     }
     let event_loop = glium::winit::event_loop::EventLoopBuilder::new().build().expect("event loop building");

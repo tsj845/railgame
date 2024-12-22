@@ -1,9 +1,9 @@
 //! all that has to do with tracks in world space
 
 use super::{company::Company, specs::*};
-use std::{rc::Weak, sync::{Arc, LazyLock, Mutex}};
+use std::{rc::Weak, sync::Mutex};
 
-use super::{company::CompanyId, world::FullLoc};
+use super::world::FullLoc;
 
 pub type ObjId = u32;
 

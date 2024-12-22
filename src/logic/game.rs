@@ -24,7 +24,7 @@ pub struct Game<'a> {
     pub netenabled: bool,
     /// is this player the host?
     pub ownssession: bool,
-    pub world: World<'a>,
+    pub world: World,
     pub companies: Vec<Arc<Mutex<Company<'a>>>>,
     pub players: Vec<Player<'a>>,
     pub tracks: Vec<Arc<Mutex<Track<'a>>>>,

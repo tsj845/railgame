@@ -11,6 +11,7 @@ pub type Shares = u16;
 /// measured in cents
 pub type Money = i64;
 /// measured in cents
+#[allow(dead_code)]
 pub struct Price(u64);
 impl Price {
     pub fn from_money(amount: Money) -> Price {Price(match amount >= 0 {true=>amount as u64,_=>0})}
