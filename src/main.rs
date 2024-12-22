@@ -1,8 +1,12 @@
+#![allow(non_upper_case_globals)]
 #[macro_use]
 extern crate glium;
 
+use std::env::args;
+
 use glium::Surface;
 use glium::winit::event::WindowEvent;
+use railgame::logic::specs::{get_indust_spec, CarCapacity};
 
 #[derive(Copy, Clone)]
 struct Vertex {
@@ -15,7 +19,13 @@ const vertex_shader_src: &'static str = include_str!("../shaders/main.vert");
 
 const fragment_shader_src: &'static str = include_str!("../shaders/main.frag");
 
+#[allow(deprecated)]
 fn main() {
+    if args().len() > 1 {
+        // println!("{}", serde_json::to_string(&CarCapacity::Test(0)).unwrap());
+        println!("{:?}", get_indust_spec(0));
+        return;
+    }
     let event_loop = glium::winit::event_loop::EventLoopBuilder::new().build().expect("event loop building");
     let (window, display) = glium::backend::glutin::SimpleWindowBuilder::new().build(&event_loop);
 

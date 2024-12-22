@@ -1,0 +1,11 @@
+[
+    {
+        "specid": 0,
+        "name": "wood",
+        "requirements": [
+            {"terrain":"forest"}
+        ],
+        "consumes": [],
+        "produces": [{"type":"wood","rate":{"base":25,"scaling":5}}]
+    }
+]

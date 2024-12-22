@@ -2,7 +2,7 @@
     {
         "specid": 0,
         "name": "Hopper Car",
-        "cargo_types": ["coal", "grain"],
+        "cargo_types": ["coal"],
         "capacity": {"stdfreight":{"weight":243,"volume":3200}}
     },
     {
@@ -10,5 +10,18 @@
         "name": "Tanker Car",
         "cargo_types": ["oil", "gasoline"],
         "capacity": {"stdfreight":{"weight":198,"volume":10000}}
+    },
+    {
+        "specid": 2,
+        "name": "Covered Hopper Car",
+        "cargo_types": ["grain"]
+    },
+    {
+        "specid": 3,
+        "name": "Flat Car",
+        "variants": [
+            {"name":"Plain","length":60,"cargo_types":["beams"],"capacity":{"stdfreight":{"weight":101,"volume":0}}}
+        ],
+        "cargo_types": ["logs", "pipe", "beams", "military"]
     }
 ]
