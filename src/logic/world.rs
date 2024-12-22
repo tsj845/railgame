@@ -1,5 +1,7 @@
 //! world data
 
+use super::company::CompanyId;
+
 pub const MIC_SCALE: usize = 5;
 
 /// micro grid location
@@ -15,24 +17,24 @@ pub struct FullLoc{pub mac:Loc, pub mic:SLoc}
 
 pub struct World<'a> {
     /// macro scale grid
-    grid: &'a mut [MacCell],
+    pub grid: &'a mut [MacCell],
     /// in-game time
-    time: (),
+    pub time: (),
     /// play time
-    duration: (),
+    pub duration: (),
 }
 pub struct MacCell {
     /// micro scale grid
-    subs: [MicCell; MIC_SCALE * MIC_SCALE],
+    pub subs: [MicCell; MIC_SCALE * MIC_SCALE],
     /// flag for if the play must go into micro view to build rail here
-    free_rail: bool,
-    land_owner: u16,
+    pub free_rail: bool,
+    pub land_owner: CompanyId,
 }
 #[derive(Clone, Copy)]
 pub struct MicCell {
-    land_owner: u16,
-    elevation: u8,
-    terrain: Terrain,
+    pub land_owner: CompanyId,
+    pub elevation: u8,
+    pub terrain: Terrain,
 }
 pub type Terrain = u8;
 #[allow(non_upper_case_globals)]
