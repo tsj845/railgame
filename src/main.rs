@@ -3,6 +3,7 @@
 extern crate glium;
 
 use std::env::args;
+use std::time::Instant;
 
 use glium::Surface;
 use glium::winit::event::WindowEvent;
@@ -18,6 +19,59 @@ implement_vertex!(Vertex, position, color);
 const vertex_shader_src: &'static str = include_str!("../shaders/main.vert");
 
 const fragment_shader_src: &'static str = include_str!("../shaders/main.frag");
+
+#[derive(Clone, Copy, PartialEq)]
+enum ScrollDirection {
+    Up,
+    Down,
+    None
+}
+
+struct ScrollStatus {
+    direction: ScrollDirection,
+    start_time: Instant,
+    start_angle: f32,
+    scale_factor: f32,
+}
+
+impl ScrollStatus {
+    fn new(scale_factor: f32) -> ScrollStatus {
+        ScrollStatus{ direction: ScrollDirection::None, start_time: Instant::now(), start_angle: 0., scale_factor }
+    }
+
+    fn process_key(&mut self, key: glium::winit::event::KeyEvent) {
+        match (key.logical_key, key.state) {
+            (glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowUp), glium::winit::event::ElementState::Pressed) => match self.direction {
+                ScrollDirection::Down => { self.start_angle = self.get_angle(); self.direction = ScrollDirection::None },
+                ScrollDirection::None => { self.direction = ScrollDirection::Up; self.start_time = Instant::now() },
+                _ => {}
+            },
+            (glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowUp), glium::winit::event::ElementState::Released) => if self.direction == ScrollDirection::Up {
+                self.start_angle = self.get_angle();
+                self.direction = ScrollDirection::None;
+            },
+            (glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowDown), glium::winit::event::ElementState::Pressed) => match self.direction {
+                ScrollDirection::Up   => { self.start_angle = self.get_angle(); self.direction = ScrollDirection::None },
+                ScrollDirection::None => { self.direction = ScrollDirection::Down; self.start_time = Instant::now() },
+                _ => {}
+            },
+            (glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowDown), glium::winit::event::ElementState::Released) => if self.direction == ScrollDirection::Down {
+                self.start_angle = self.get_angle();
+                self.direction = ScrollDirection::None;
+            },
+            _ => {}
+        }
+    }
+
+    fn get_angle(&self) -> f32 {
+        match self.direction {
+            ScrollDirection::Up   => self.start_angle + self.start_time.elapsed().as_secs_f32() * self.scale_factor,
+            ScrollDirection::Down => self.start_angle - self.start_time.elapsed().as_secs_f32() * self.scale_factor,
+            ScrollDirection::None => self.start_angle
+        }
+        .max(0.).min(1.2)
+    }
+}
 
 #[allow(deprecated)]
 fn main() {
@@ -40,7 +94,7 @@ fn main() {
 
     let program = glium::Program::from_source(&display, vertex_shader_src, fragment_shader_src, None).unwrap();
 
-    let mut angle: f32 = 0.0;
+    let mut scroll = ScrollStatus::new(1.);
 
     let _ = event_loop.run(move |event, window_target| {
         match event {
@@ -50,20 +104,20 @@ fn main() {
                     display.resize(window_size.into());
                 },
                 WindowEvent::RedrawRequested => {
+                    let angle = scroll.get_angle();
                     let mut frame = display.draw();
                     frame.clear_color(0.3, 0.2, 1.0, 1.0);
                     frame.draw(&vertex_buffer, &indices, &program, &uniform! { trans: [[1., 0., 0., 0.], [0., angle.cos(), -angle.sin(), angle.sin()], [0., angle.sin()/4., angle.cos()/4., -angle.cos()/4.], [0., 0., 0., 1.0f32]]}, &Default::default()).unwrap();
                     frame.finish().unwrap();
                 },
                 WindowEvent::KeyboardInput { event, .. } => {
-                    match event.logical_key {
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowRight) => angle = (angle+0.05).min(1.2),
-                        glium::winit::keyboard::Key::Named(glium::winit::keyboard::NamedKey::ArrowLeft) => angle = (angle-0.05).max(0.),
-                        _ => {}
-                    }
+                    scroll.process_key(event);
                     window.request_redraw();
                 },
                 _ => (),
+            },
+            glium::winit::event::Event::AboutToWait => {
+                window.request_redraw();
             },
             _ => (),
         };
