@@ -36,17 +36,26 @@ pub struct MicCell {
     pub elevation: u8,
     pub terrain: Terrain,
 }
-pub type Terrain = u8;
-#[allow(non_upper_case_globals)]
-pub const Water: Terrain = 0;
-#[allow(non_upper_case_globals)]
-pub const Grass: Terrain = 1;
-#[allow(non_upper_case_globals)]
-pub const Field: Terrain = 2;
-#[allow(non_upper_case_globals)]
-pub const Rock: Terrain = 3;
-#[allow(non_upper_case_globals)]
-pub const Forest: Terrain = 4;
+#[repr(u8)]
+#[derive(Clone, Copy)]
+pub enum Terrain {
+    Water = 0,
+    Grass,
+    Field,
+    Rock,
+    Forest
+}
+// pub type Terrain = u8;
+// #[allow(non_upper_case_globals)]
+// pub const Water: Terrain = 0;
+// #[allow(non_upper_case_globals)]
+// pub const Grass: Terrain = 1;
+// #[allow(non_upper_case_globals)]
+// pub const Field: Terrain = 2;
+// #[allow(non_upper_case_globals)]
+// pub const Rock: Terrain = 3;
+// #[allow(non_upper_case_globals)]
+// pub const Forest: Terrain = 4;
 
 impl FullLoc{pub fn new(mac:Loc, mic:SLoc)->Self{Self{mac,mic}}}
 impl Loc{pub fn to_index(&self, w: usize) -> usize{self.x as usize+w*self.y as usize}}

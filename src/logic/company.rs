@@ -2,7 +2,7 @@
 
 use std::sync::{Arc,Mutex};
 
-use super::{game::PlayerId, trains::{Route, Train, TrainCar}};
+use super::{game::PlayerId, trains::{Locomotive, Route, Train, TrainCar}};
 
 pub type CompanyId = u16;
 /// 10k exact exist for each company
@@ -21,7 +21,8 @@ pub struct Company<'a> {
     pub name:   &'a str,
     pub ceo:    PlayerId,
     pub worth:  Money,
-    pub routes: Vec<Arc<Route<'a>>>,
+    pub routes: Vec<Arc<Mutex<Route<'a>>>>,
+    pub locos:  Vec<Arc<Mutex<Locomotive<'a>>>>,
     pub trains: Vec<Arc<Mutex<Train<'a>>>>,
     pub cars:   Vec<Arc<Mutex<TrainCar<'a>>>>,
 }

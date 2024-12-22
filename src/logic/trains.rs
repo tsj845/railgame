@@ -52,7 +52,7 @@ pub struct Train<'a> {
     pub owner: Weak<Mutex<Company<'a>>>,
     pub name:  &'a str,
     /// trains can only be assigned to one route at a time
-    pub route: Weak<Route<'a>>,
+    pub route: Weak<Mutex<Route<'a>>>,
     /// one primary locomotive
     pub loco:  Weak<Mutex<Locomotive<'a>>>,
     pub helpers: &'a[Weak<Mutex<Locomotive<'a>>>],
