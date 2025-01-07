@@ -56,6 +56,7 @@ pub struct World {
     /// macro scale grid
     pub grid: Box<[MacCell]>,
     pub width: u16,
+    pub height: u16,
     /// in-game time
     pub time: (),
     /// play time
@@ -76,7 +77,7 @@ impl World {
             }
             mcells.push(MacCell{subs:msubs,free_rail:sm.free_rail,land_owner:sm.owner});
         }
-        Self {grid:mcells.into_boxed_slice(),width:jsw.dimensions.0,time:(),duration:()}
+        Self {grid:mcells.into_boxed_slice(),width:jsw.dimensions.0,height:jsw.dimensions.1,time:(),duration:()}
     }
 }
 #[derive(Debug)]
@@ -87,6 +88,7 @@ pub struct MacCell {
     pub free_rail: bool,
     pub land_owner: CompanyId,
 }
+
 #[derive(Debug, Clone, Copy)]
 pub struct MicCell {
     pub land_owner: CompanyId,
