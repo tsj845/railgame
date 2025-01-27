@@ -27,3 +27,18 @@ pub struct Company<'a> {
     pub trains: Vec<Arc<Mutex<Train<'a>>>>,
     pub cars:   Vec<Arc<Mutex<TrainCar<'a>>>>,
 }
+
+impl<'a> Company<'a> {
+    pub fn gov() -> Arc<Mutex<Self>> {
+        Arc::new(Mutex::new(Self {
+            id: 0,
+            name: "Government",
+            ceo: 0,
+            worth: 0,
+            routes: Vec::new(),
+            locos: Vec::new(),
+            trains: Vec::new(),
+            cars: Vec::new()
+        }))
+    }
+}

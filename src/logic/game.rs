@@ -32,3 +32,17 @@ pub struct Game<'a> {
     /// LinkedList because trains will be added and removed randomly, prevents expensive moves
     pub trains: LinkedList<Weak<Mutex<Train<'a>>>>
 }
+
+impl<'a> Game<'a> {
+    pub fn host(w: World, port: u16) -> Self {
+        Self {
+            netenabled: false,
+            ownssession: true,
+            world: w,
+            companies: vec![Company::gov()],
+            players: Vec::new(),
+            tracks: Vec::new(),
+            trains: LinkedList::new()
+        }
+    }
+}

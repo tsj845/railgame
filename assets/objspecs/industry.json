@@ -3,7 +3,7 @@
         "specid": 0,
         "name": "lumber",
         "requirements": [
-            {"terrain":{"type":"forest","range":3,"min":8}}
+            {"terrain":{"type":"forest","counts":{"range":3,"min":8}}}
         ],
         "consumes": [],
         "produces": [{"type":"wood","rate":{"base":25,"scaling":5}}]

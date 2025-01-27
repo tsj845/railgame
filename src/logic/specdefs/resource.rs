@@ -16,8 +16,15 @@ pub struct RawResourceTypeSpec {
     pub id: ResourceId,
     pub name: &'static str,
     pub desc: &'static str,
+    #[serde(default)]
     pub constraints: Cow<'static, [RawResourceTypeConstraintSpec]>,
+    #[serde(default)]
     pub implies: Cow<'static, [Cow<'static, str>]>,
+}
+impl Default for RawResourceTypeSpec {
+    fn default() -> Self {
+        Self {id:ResourceId::MAX,name:"INVALID",desc:"NO DESCRIPTION",constraints:Cow::Owned(Vec::new()),implies:Cow::Owned(Vec::new())}
+    }
 }
 
 #[derive(Debug, Clone)]
